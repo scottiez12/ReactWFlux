@@ -5,8 +5,8 @@ import HomePage from "./HomePage";
 import AboutPage from "./AboutPage";
 import Header from "./Common/Header";
 import CoursesPage from "./CoursesPage";
-
-import { Route } from "react-router-dom";
+import NotFoundPage from "./NotFoundPage";
+import { Route, Switch } from "react-router-dom";
 
 function App() {
   // function getPage() {
@@ -20,9 +20,12 @@ function App() {
   return (
     <div className="container-fluid">
       <Header />
-      <Route path="/" exact component={HomePage} />
-      <Route path="/courses" component={CoursesPage} />
-      <Route path="/about" component={AboutPage} />
+      <Switch>
+        <Route path="/" exact component={HomePage} />
+        <Route path="/courses" component={CoursesPage} />
+        <Route path="/about" component={AboutPage} />
+        <Route component={NotFoundPage}></Route>
+      </Switch>
     </div>
   );
 }
