@@ -9,8 +9,21 @@ export function saveCourse(course) {
     dispatcher.dispatch({
       //this is the actual action
       //action types get stored in a constants file
-      actionType: actionTypes.CREATE_COURSE,
+      //so we need to make sure this save knows the difference between update course and create course...
+      actionType: course.id
+        ? actionTypes.UPDAATE_COURSE
+        : actionTypes.CREATE_COURSE,
+
       course: savedCourse,
+    });
+  });
+}
+
+export function loadCourses() {
+  return courseApi.getCourses().then((courses) => {
+    dispatcher.dispatch({
+      actionType: actionTypes.LOAD_COURSES,
+      course: courses,
     });
   });
 }

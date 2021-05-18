@@ -49,6 +49,19 @@ Dispatcher.register((action) => {
       store.emitChange();
       break;
 
+    case actionTypes.UPDAATE_COURSE:
+      //so this iterates over all the courses, and if the id in the action is the same is the id of the course we're looking at
+      //so if it exists, then update it, if not, create it (do nothing)
+      _courses = _courses.map((course) =>
+        course.id === action.course.id ? action.course : course
+      );
+      break;
+
+    case actionTypes.LOAD_COURSES:
+      _courses = action.course;
+      store.emitChange();
+      break;
+
     default:
     //nothing to do here, because if there was a different store listening in on emitChange, then it would matter there, not here
     //since all stores listen to the dispatcher

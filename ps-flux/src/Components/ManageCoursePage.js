@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import CourseForm from "./CourseForm";
 // import { Prompt } from "react-router-dom";
-import * as courseApi from "../api/courseApi";
+
+//we no longer need this courseApi reference, because the courseStore has all those methods now
+//import * as courseApi from "../api/courseApi";
+//so instead we import the course store
+import courseStore from "../stores/courseStore";
+
+//import flux actions courseActions
+import * as courseActions from "../actions/courseActions";
+
 import { toast } from "react-toastify";
 
 const ManageCoursePage = (props) => {
@@ -14,11 +22,13 @@ const ManageCoursePage = (props) => {
     category: "",
   });
 
-  //state for getting the data from the api
+  //state for getting the data from the apis
   useEffect(() => {
     const slug = props.match.params.slug; //from the path '/course/:slug'
     if (slug) {
-      courseApi.getCourseBySlug(slug).then((_course) => setCourse(_course));
+      //so now this state () changes from using the courseApi to the store
+      //courseApi.getCourseBySlug(slug).then((_course) => setCourse(_course));
+      setCourse(courseStore.getCourseBySlug(slug));
     }
   }, [props.match.params.slug]);
   //so yeah it would be really tough if we had to do this for every single value in a form.. or a bunch of forms..
@@ -52,7 +62,10 @@ const ManageCoursePage = (props) => {
   function handleSubmit(event) {
     event.preventDefault();
     if (!formIsValid()) return;
-    courseApi.saveCourse(course).then(() => {
+    //instead of calling the Api, we call the saveCourse flux action from courseAction
+    //so we need to import courseActions
+    //courseApi.saveCourse(course).then(() => {
+    courseActions.saveCourse(course).then(() => {
       props.history.push("/courses");
       toast.success("Course Saved!");
     });
