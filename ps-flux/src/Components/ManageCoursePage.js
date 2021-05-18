@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 
 const ManageCoursePage = (props) => {
   const [errors, setErrors] = useState({});
+  //store courses in state so if someone reloads it doesn't crash
+  const [courses, setCourses] = useState(courseStore.getCourses);
   const [course, setCourse] = useState({
     id: null,
     slug: "",
@@ -24,13 +26,26 @@ const ManageCoursePage = (props) => {
 
   //state for getting the data from the apis
   useEffect(() => {
+    courseStore.addChangeListener(onChange);
     const slug = props.match.params.slug; //from the path '/course/:slug'
-    if (slug) {
+    //so if courses isn't populated, then we call the load courses
+    //in which case the dependency array has a change, so useEffect runs again, this time seeing a slug in the url, so it knows which course to load
+    //this makes sure that if the page is loaded directly, we get the expected result.
+    if (courses.length === 0) {
+      courseActions.loadCourses();
+    } else if (slug) {
       //so now this state () changes from using the courseApi to the store
       //courseApi.getCourseBySlug(slug).then((_course) => setCourse(_course));
       setCourse(courseStore.getCourseBySlug(slug));
     }
-  }, [props.match.params.slug]);
+    return () => courseStore.removeChangeListener(onChange);
+    //this below is the dependency array of useEffect...
+  }, [courses.length, props.match.params.slug]);
+
+  function onChange() {
+    setCourses(courseStore.getCourses());
+  }
+
   //so yeah it would be really tough if we had to do this for every single value in a form.. or a bunch of forms..
   //so we modify basically this below change handler to use on all inputs
   function handleTitleChange(event) {

@@ -9,7 +9,7 @@ import CourseList from "./CourseList";
 import { Link } from "react-router-dom";
 
 //need to load courses if this page is getting loaded for the first time, since the original state is an empty array
-import { loadCourses } from "../actions/courseActions";
+import { loadCourses, deleteCourse } from "../actions/courseActions";
 
 function CoursesPage() {
   const [courses, setCourses] = useState(courseStore.getCourses);
@@ -31,6 +31,8 @@ function CoursesPage() {
   }, []);
 
   function onChange() {
+    //step 4 -  react realizes that the store has changed
+    debugger;
     setCourses(courseStore.getCourses());
   }
 
@@ -40,7 +42,7 @@ function CoursesPage() {
       <Link className="btn btn-primary" to="/course">
         Add Course
       </Link>
-      <CourseList courses={courses} />
+      <CourseList courses={courses} deleteCourse={deleteCourse} />
     </>
   );
 }

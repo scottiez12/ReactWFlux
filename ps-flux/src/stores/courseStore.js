@@ -49,7 +49,7 @@ Dispatcher.register((action) => {
       store.emitChange();
       break;
 
-    case actionTypes.UPDAATE_COURSE:
+    case actionTypes.UPDATE_COURSE:
       //so this iterates over all the courses, and if the id in the action is the same is the id of the course we're looking at
       //so if it exists, then update it, if not, create it (do nothing)
       _courses = _courses.map((course) =>
@@ -59,6 +59,15 @@ Dispatcher.register((action) => {
 
     case actionTypes.LOAD_COURSES:
       _courses = action.course;
+      store.emitChange();
+      break;
+
+    case actionTypes.DELETE_COURSE:
+      //step 3 - store
+      debugger;
+      _courses = _courses.filter(
+        (course) => course.id !== parseInt(action.id, 10)
+      );
       store.emitChange();
       break;
 
